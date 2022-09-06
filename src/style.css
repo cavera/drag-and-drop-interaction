@@ -1,0 +1,56 @@
+:root{
+    --size: 40px;
+    --testcolor:#3465fd;
+    --testcolor2:rgb(154, 36, 183);
+    --white:#FFF;
+    --radius1: 10px;
+    --space:10px;
+    --font: system-ui;
+}
+
+html{
+    font-family: var(--font);
+}
+
+.box{
+    width: var(--size);
+    height: var(--size);
+    background-color: var(--testcolor);
+}
+.drops,
+.arrastrables{
+    display: flex;
+    gap: var(--space);
+}
+
+.arrastrable{
+    width: var(--size);
+    height: var(--size);
+    border-radius: var(--radius1);
+    background-color: var(--testcolor);
+    color:var(--white);
+    display: grid;
+    place-items: center;
+}
+
+.arrastrando{
+    background-color: var(--white);
+    border: 1px solid var(--testcolor);
+    color:var(--testcolor);
+}
+
+.arr-container{
+    width: var(--size);
+    height: var(--size);
+    background-color: var(--white);
+    border: 1px solid var(--testcolor);
+}
+.caja{
+    width: var(--size);
+    height: var(--size);
+    background-color: var(--white);
+    border: 1px solid var(--testcolor2);
+}
+
+
+
