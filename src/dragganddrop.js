@@ -3,7 +3,6 @@ const dragElemsClass = ".draggable";
 const dropAreasClass = ".drop-area";
 const dragElems = document.querySelectorAll(dragElemsClass);
 const dropAreas = document.querySelectorAll(dropAreasClass);
-const cantidadico = dragElems.length;
 const btnOrderElements = limits.querySelector("#btn-order");
 const btnAnswer = limits.querySelector("#btn-answer");
 const btnContinue = limits.querySelector("#btn-continue");
