@@ -9,33 +9,35 @@
 	</head>
 	<body>
 		<div class="wrapper">
-			<div class="box"></div>
-			<div class="arrastrables">
-				<div class="arr-container">
-					<div class="arrastrable" data-orden="1"></div>
+			<div class="actividad">
+				<div class="arrastrables">
+					<div class="arr-container">
+						<div class="arrastrable" data-group="1"></div>
+					</div>
+					<div class="arr-container">
+						<div class="arrastrable" data-group="2"></div>
+					</div>
+					<div class="arr-container">
+						<div class="arrastrable" data-group="3"></div>
+					</div>
+					<div class="arr-container">
+						<div class="arrastrable" data-group="4"></div>
+					</div>
 				</div>
-				<div class="arr-container">
-					<div class="arrastrable" data-orden="2"></div>
+				<div class="drop-areas">
+					<div class="drop-area" data-group="1"></div>
+					<div class="drop-area" data-group="2"></div>
+					<div class="drop-area" data-group="3"></div>
+					<div class="drop-area" data-group="4"></div>
 				</div>
-				<div class="arr-container">
-					<div class="arrastrable" data-orden="3"></div>
+				<div class="botonera">
+					<button class="verificar">Verificar</button>
+					<button class="responder">Responder</button>
+					<button class="continuar">Continuar</button>
 				</div>
-				<div class="arr-container">
-					<div class="arrastrable" data-orden="4"></div>
+				<div class="retro-grupo">
+					<div class="continuar"></div>
 				</div>
-			</div>
-			<div class="drops">
-				<div class="caja"></div>
-				<div class="caja"></div>
-				<div class="caja"></div>
-				<div class="caja"></div>
-			</div>
-
-			<div class="verificar"></div>
-			<div class="responder"></div>
-			<div class="continuar"></div>
-			<div class="retro-grupo">
-				<div class="continuar"></div>
 			</div>
 		</div>
 		<script src="./gsap-public/minified/gsap.min.js"></script>

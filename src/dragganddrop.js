@@ -1,6 +1,6 @@
 const limites = document.querySelector(".wrapper");
 const retroGrupo = document.querySelector(".retro-grupo");
-const cajas = document.querySelectorAll(".caja");
+const cajas = document.querySelectorAll(".drop-area");
 const piezas = document.querySelectorAll(".arrastrable");
 const cantidadico = piezas.length;
 const btnVerificar = limites.querySelector(".verificar");
@@ -14,27 +14,28 @@ let cantArr = [];
 let usados;
 let exito;
 
-iniEjercicio();
-
-function iniEjercicio() {
+const iniEjercicio = () => {
 	// btnResponder.on("click", Responder);
 	// btnVerificar.on("click", ordenarElementos);
 	// btnContinuar.on("click", Continuar);
 	// btnCierreCont.on("click", CerrarRetro);
 	// btnSalir.on("click", SalirActividad);
 
+	btnVerificar.style.display = "none";
+	btnResponder.style.display = "none";
+	btnContinuar.style.display = "none";
+
 	for (var i = 0; i < cantidadico; i++) {
 		const arrElem = piezas[i];
-		const arrOrder = arrElem.dataset.orden;
-		let orderEl = document.querySelector('[data-orden="' + (i + 1) + '"]');
+		const arrGroup = arrElem.dataset.group;
+		let groupEl = document.querySelector('[data-group="' + (i + 1) + '"]');
 
-		// solo para debug
-		arrElem.append(arrOrder);
-		// termina debug
-		// arrElem.dataset.parent = arrElem.parentElement.
 		arrElem.parentElement.id = `origin-${i}`;
 		arrElem.dataset.parent = arrElem.parentElement.id;
-		// arrElem.parentElement.dataset.orden = arrElem.dataset.orden;
+
+		// solo para debug
+		arrElem.append(arrElem.dataset.parent);
+		// termina debug
 
 		Draggable.create(arrElem, {
 			type: "x,y",
@@ -45,14 +46,14 @@ function iniEjercicio() {
 			onDragParams: [arrElem],
 
 			onDragEnd: Soltar,
-			onDragEndParams: [arrElem, Number(arrOrder - 1)],
+			onDragEndParams: [arrElem, Number(arrGroup - 1), this],
 		});
 
 		Draggable.zIndex = 120;
 	}
-}
+};
 
-function Arrastrando(elemento) {
+const Arrastrando = function (elemento) {
 	const arrasEl = elemento;
 
 	arrasEl.classList.add("arrastrando");
@@ -60,9 +61,15 @@ function Arrastrando(elemento) {
 	for (let i = 0; i < cantidadico; i++) {
 		let dropped = cajas[i];
 
-		let used = dropped.classList.contains("usado");
+		if (this.hitTest(dropped, "90%")) {
+			// console.log({ dropped });
+			// dropped.style.height = `${arrasEl.clientHeight}px`;
+			// console.log(arrasEl.offsetHeight);
+		} else {
+			// dropped.style.height = ``;
+		}
 
-		// console.log({ dropped });
+		let used = dropped.classList.contains("usado");
 
 		if (used) {
 			let d_obj = dropped.dataset.el;
@@ -70,33 +77,28 @@ function Arrastrando(elemento) {
 			if (this === d_obj) {
 				dropped.classList.remove("usado");
 
-				console.warn("si");
+				// console.warn("si");
 			} else {
-				console.warn("no");
+				// console.warn("no");
 			}
 		}
 	}
 
 	let posicion = "pos : " + this.x + " : " + this.y;
 	// console.log({ posicion });
-}
+};
 
-function Soltar(args, numero) {
-	console.log(args);
-	console.warn("Soltar");
-	const arrasEl = args;
+const Soltar = function (args, numero) {
+	let arrasEl = args;
 	let encaja = false;
 	arrasEl.classList.remove("arrastrando");
-
-	for (var i = 0; i < cajas.length; i++) {
-		var dropped = cajas[i];
-		if (this.hitTest(dropped)) {
-			console.warn(numero + " : " + i);
-
+	for (let i = 0; i < cajas.length; i++) {
+		let dropped = cajas[i];
+		if (this.hitTest(dropped, 20)) {
 			_compara1[i] = numero;
 			_compara2[i] = i;
 
-			// console.log(_compara1 + ' : ' + _compara2);
+			console.log(_compara1 + " : " + _compara2);
 
 			arrasEl.classList.add("recibido");
 
@@ -113,7 +115,8 @@ function Soltar(args, numero) {
 				}
 			}
 
-			dropped.dataset.el = this;
+			dropped.dataset.el = String(this.target);
+			console.log(this);
 			dropped.classList.add("usado");
 
 			encaja = true;
@@ -127,23 +130,23 @@ function Soltar(args, numero) {
 	if (!encaja) {
 		Devolver(arrasEl);
 	}
-}
+};
 
-function Devolver(el) {
-	arContainer = document.getElementById(el.dataset.parent);
-
+const Devolver = function (el) {
+	let elParent = el.getAttribute("data-parent");
+	let arContainer = document.getElementById(elParent);
 	arContainer.append(el);
 	gsap.set(el, { clearProps: "transform" });
-
 	verificarInfo();
-}
+};
 
-function centrarEn(elemento, ubicacion) {
+const centrarEn = (elemento, ubicacion) => {
+	console.log("centrarEn");
 	ubicacion.appendChild(elemento);
 	gsap.set(elemento, { clearProps: "transform" });
-}
+};
 
-function verificarInfo() {
+const verificarInfo = () => {
 	for (let j = 0; j < cantidadico; j++) {
 		let dropped = cajas[j];
 		let used = dropped.classList.contains("usado");
@@ -161,25 +164,25 @@ function verificarInfo() {
 	} else {
 		btnResponder.style.display = "";
 	}
-}
+};
 
-function Responder() {
+const Responder = () => {
 	// console.log('_compara1 : ' + _compara1);
 	// console.log('_compara2 : ' + _compara2);
 
-	for (var j = 0; j < cajas.length; j++) {
-		var caja = $(cajas[j]),
-			arrasEl = $(caja.data("el").target);
+	for (let j = 0; j < cajas.length; j++) {
+		const caja = cajas[j];
+		const arrasEl = caja.dataset.el.target;
 
-		var comparable1 = caja.data("grupo");
-		var comparable2 = $(caja.data("el").target).data("grupo");
+		const comparable1 = caja.dataset.grupo;
+		const comparable2 = caja.data.set.el.target.data.grupo;
 
 		console.log("comparables: " + j + " - " + comparable1 + " : " + comparable2);
 
 		if (comparable1 === comparable2) {
-			arrasEl.prepend(iconCheck);
+			arrasEl.classList.add("good");
 		} else {
-			arrasEl.prepend(iconAspa);
+			arrasEl.classList.add("bad");
 			exito = false;
 		}
 	}
@@ -188,21 +191,22 @@ function Responder() {
 	btnVerificar.style.display = "";
 
 	limites.classList.add("verificado");
-}
+};
 
-function ordenarElementos() {
+const ordenarElementos = () => {
 	console.log("ordenarElementos");
 
-	for (var k = 0; k < cantidadico; k++) {
-		var arrasEl = $(piezas[k]),
-			ps = $("#p" + (k + 1)),
-			cs = $("#c" + (k + 1));
+	for (let k = 0; k < cantidadico; k++) {
+		const arrasEl = piezas[k];
+		const ps = document.querySelector("#p" + (k + 1));
+		const cs = document.querySelector("#c" + (k + 1));
 
 		if (k >= cajas.length) {
-			ps.css("opacity", "0");
-			ps.hide();
+			ps.style.opacity = 0;
+			ps.style.display = "none";
 		} else {
-			arrasEl.removeClass("recibido").addClass("ordenado");
+			arrasEl.classList.remove("recibido");
+			arrasEl.classList.add("ordenado");
 		}
 
 		arrasEl.find("[class*=icon-]").remove();
@@ -217,53 +221,29 @@ function ordenarElementos() {
 
 	btnVerificar.hide();
 	btnContinuar.show();
-}
+};
 
-function Continuar() {
-	if (exito) {
-		window.PLANTILLA.setDato("obligacion", false);
-	} else {
-		window.PLANTILLA.setDato("obligacion", true);
-	}
-
+const Continuar = () => {
 	limites.slideUp(_tiempo);
 	retroGrupo.slideDown(_tiempo);
 	console.log("exito : " + exito);
 	if (exito) {
 		retroGrupo.addClass("retro-bien");
-		window.AUDIO.playAudio(audioBien);
-		window.AUDIO.playFx("correcto");
 	} else {
 		retroGrupo.addClass("retro-mal");
-		window.AUDIO.playAudio(audioMal);
-		window.AUDIO.playFx("incorrecto");
 	}
 	btnContinuar.hide();
-}
+};
 
-function CerrarRetro() {
-	retroGrupo.slideUp(_tiempo);
-	if (!salto) {
-		window.AUDIO.playAudio(audioCierre);
-		compCierre.slideDown(_tiempo);
-	}
-	limites.slideUp(_tiempo);
+const CerrarRetro = () => {};
 
-	SalirActividad();
-}
+const SalirActividad = () => {};
 
-function SalirActividad() {
-	window.PLANTILLA.contenidoVisto();
-	window.PLANTILLA.cargarSiguiente();
-}
+const sumar = (myarray) => {
+	const total = myarray.reduce((prevVal, curVal) => prevVal + curVal, 0);
 
-function sumar(myarray) {
-	var total = 0;
-	for (i = 0; i < myarray.length; i++) {
-		if (!isNaN(myarray[i])) {
-			total += myarray[i];
-		}
-	}
-	// console.log('suma : ' + total);
+	console.log("suma : " + total);
 	return total;
-}
+};
+
+iniEjercicio();
