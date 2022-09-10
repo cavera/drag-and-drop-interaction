@@ -1,135 +1,86 @@
-const limites = document.querySelector(".wrapper");
+const limits = document.querySelector(".wrapper");
+const dragElemsClass = ".draggable";
+const dropAreasClass = ".drop-area";
+const dragElems = document.querySelectorAll(dragElemsClass);
+const dropAreas = document.querySelectorAll(dropAreasClass);
+const cantidadico = dragElems.length;
+const btnOrderElements = limits.querySelector("#btn-order");
+const btnAnswer = limits.querySelector("#btn-answer");
+const btnContinue = limits.querySelector("#btn-continue");
 const retroGrupo = document.querySelector(".retro-grupo");
-const cajas = document.querySelectorAll(".drop-area");
-const piezas = document.querySelectorAll(".arrastrable");
-const cantidadico = piezas.length;
-const btnVerificar = limites.querySelector(".verificar");
-const btnResponder = limites.querySelector(".responder");
-const btnContinuar = limites.querySelector(".continuar");
 const btnCierreCont = retroGrupo.querySelector(".continuar");
-const _tiempo = 300;
-let _compara1 = [];
-let _compara2 = [];
 let cantArr = [];
-let usados;
-let exito;
+let success;
+let isDebugging = true;
 
 const iniEjercicio = () => {
-	// btnResponder.on("click", Responder);
-	// btnVerificar.on("click", ordenarElementos);
-	// btnContinuar.on("click", Continuar);
-	// btnCierreCont.on("click", CerrarRetro);
-	// btnSalir.on("click", SalirActividad);
+	btnAnswer.addEventListener("click", Responder);
+	btnOrderElements.addEventListener("click", ordenarElementos);
+	btnContinue.addEventListener("click", Continuar);
+	btnCierreCont.addEventListener("click", CerrarRetro);
 
-	btnVerificar.style.display = "none";
-	btnResponder.style.display = "none";
-	btnContinuar.style.display = "none";
+	btnOrderElements.style.display = "none";
+	btnAnswer.style.display = "none";
+	btnContinue.style.display = "none";
 
-	for (var i = 0; i < cantidadico; i++) {
-		const arrElem = piezas[i];
-		const arrGroup = arrElem.dataset.group;
-		let groupEl = document.querySelector('[data-group="' + (i + 1) + '"]');
+	dragElems.forEach((dragElem, key) => {
+		dragElem.parentElement.id = `origin-${key + 1}`;
+		dragElem.dataset.parent = dragElem.parentElement.id;
 
-		arrElem.parentElement.id = `origin-${i}`;
-		arrElem.dataset.parent = arrElem.parentElement.id;
+		if (isDebugging) dragElem.innerHTML = `${dragElem.dataset.parent}`;
 
-		// solo para debug
-		arrElem.append(arrElem.dataset.parent);
-		// termina debug
-
-		Draggable.create(arrElem, {
+		Draggable.create(dragElem, {
 			type: "x,y",
 			edgeResistance: 0.7,
-			bounds: limites,
+			bounds: limits,
 			autoScroll: 1,
-			onDrag: Arrastrando,
-			onDragParams: [arrElem],
 
-			onDragEnd: Soltar,
-			onDragEndParams: [arrElem, Number(arrGroup - 1), this],
+			onDrag: isDragging,
+			onDragParams: [dragElem],
+
+			onDragEnd: hasDropped,
+			onDragEndParams: [dragElem],
 		});
 
 		Draggable.zIndex = 120;
-	}
+	});
 };
 
-const Arrastrando = function (elemento) {
-	const arrasEl = elemento;
+const isDragging = (arrasEl) => {
+	arrasEl.classList.add("dragging");
+	const thisDraggable = Draggable.get(arrasEl);
 
-	arrasEl.classList.add("arrastrando");
+	dropAreas.forEach((caja) => {
+		let used = caja.classList.contains("occupied");
 
-	for (let i = 0; i < cantidadico; i++) {
-		let dropped = cajas[i];
-
-		if (this.hitTest(dropped, "90%")) {
-			// console.log({ dropped });
-			// dropped.style.height = `${arrasEl.clientHeight}px`;
-			// console.log(arrasEl.offsetHeight);
+		if (thisDraggable.hitTest(caja, "50%") && !used) {
+			caja.classList.add("able");
 		} else {
-			// dropped.style.height = ``;
+			caja.classList.remove("able");
 		}
+	});
 
-		let used = dropped.classList.contains("usado");
-
-		if (used) {
-			let d_obj = dropped.dataset.el;
-
-			if (this === d_obj) {
-				dropped.classList.remove("usado");
-
-				// console.warn("si");
-			} else {
-				// console.warn("no");
-			}
-		}
-	}
-
-	let posicion = "pos : " + this.x + " : " + this.y;
-	// console.log({ posicion });
+	let posicion = `pos : ${thisDraggable.x} : ${thisDraggable.y}`;
 };
 
-const Soltar = function (args, numero) {
-	let arrasEl = args;
+const hasDropped = (arrasEl) => {
 	let encaja = false;
-	arrasEl.classList.remove("arrastrando");
-	for (let i = 0; i < cajas.length; i++) {
-		let dropped = cajas[i];
-		if (this.hitTest(dropped, 20)) {
-			_compara1[i] = numero;
-			_compara2[i] = i;
+	arrasEl.classList.remove("dragging");
+	dropAreas.forEach((caja) => {
+		let thisDraggable = Draggable.get(arrasEl);
+		let used = caja.classList.contains("occupied");
 
-			console.log(_compara1 + " : " + _compara2);
-
-			arrasEl.classList.add("recibido");
-
-			centrarEn(arrasEl, dropped);
-
-			let used = dropped.classList.contains("usado");
-			console.log("dropped used : " + used);
-
-			if (used) {
-				let d_obj = dropped.dataset.el;
-
-				if (this !== d_obj) {
-					Devolver(d_obj.target);
-				}
-			}
-
-			dropped.dataset.el = String(this.target);
-			console.log(this);
-			dropped.classList.add("usado");
+		if (thisDraggable.hitTest(caja, "50%") && !used) {
+			centrarEn(arrasEl, caja);
+			caja.classList.remove("able");
 
 			encaja = true;
 			verificarInfo();
-			break;
-		} else {
-			arrasEl.classList.remove("recibido");
 		}
-	}
+	});
+	verifyUsedDropAreas();
 
-	if (!encaja) {
-		Devolver(arrasEl);
-	}
+	if (!encaja) Devolver(arrasEl);
 };
 
 const Devolver = function (el) {
@@ -147,103 +98,70 @@ const centrarEn = (elemento, ubicacion) => {
 };
 
 const verificarInfo = () => {
-	for (let j = 0; j < cantidadico; j++) {
-		let dropped = cajas[j];
-		let used = dropped.classList.contains("usado");
+	verifyUsedDropAreas();
 
-		cantArr[j] = used ? 1 : 0;
-	}
-
-	// console.log('cantArr : ' + cantArr);
-
-	usados = sumar(cantArr);
-	// console.log('cajas : ' + cajas.length);
-
-	if (usados < cajas.length) {
-		btnResponder.style.display = "none";
-	} else {
-		btnResponder.style.display = "";
-	}
+	btnAnswer.style.display = SUMAR(cantArr) < dropAreas.length ? "none" : "";
 };
 
 const Responder = () => {
-	// console.log('_compara1 : ' + _compara1);
-	// console.log('_compara2 : ' + _compara2);
+	dragElems.forEach((dragElem) => {
+		const dragElemGrupo = dragElem.dataset.group;
+		const dropGrupo = dragElem.parentElement.dataset.group;
+		let resultClass = dragElemGrupo === dropGrupo ? "good" : "bad";
+		dragElem.classList.add(resultClass);
+	});
 
-	for (let j = 0; j < cajas.length; j++) {
-		const caja = cajas[j];
-		const arrasEl = caja.dataset.el.target;
+	btnAnswer.style.display = "none";
+	btnOrderElements.style.display = "";
 
-		const comparable1 = caja.dataset.grupo;
-		const comparable2 = caja.data.set.el.target.data.grupo;
-
-		console.log("comparables: " + j + " - " + comparable1 + " : " + comparable2);
-
-		if (comparable1 === comparable2) {
-			arrasEl.classList.add("good");
-		} else {
-			arrasEl.classList.add("bad");
-			exito = false;
-		}
-	}
-
-	btnResponder.style.display = "none";
-	btnVerificar.style.display = "";
-
-	limites.classList.add("verificado");
+	limits.classList.add("verificado");
 };
 
 const ordenarElementos = () => {
 	console.log("ordenarElementos");
 
-	for (let k = 0; k < cantidadico; k++) {
-		const arrasEl = piezas[k];
-		const ps = document.querySelector("#p" + (k + 1));
-		const cs = document.querySelector("#c" + (k + 1));
+	dragElems.forEach((dragElem) => {
+		const dragElemGrupo = dragElem.dataset.group;
+		const wrongEl = dragElem.classList.contains("bad");
+		const goodArea = limits.querySelector(`${dropAreasClass}[data-group='${dragElemGrupo}']`);
+		if (wrongEl) centrarEn(dragElem, goodArea);
+	});
 
-		if (k >= cajas.length) {
-			ps.style.opacity = 0;
-			ps.style.display = "none";
-		} else {
-			arrasEl.classList.remove("recibido");
-			arrasEl.classList.add("ordenado");
-		}
-
-		arrasEl.find("[class*=icon-]").remove();
-		Draggable.get(arrasEl).kill();
-
-		if (k < cajas.length) {
-			if (!exito) {
-				centrarEn(ps, cs);
-			}
-		}
-	}
-
-	btnVerificar.hide();
-	btnContinuar.show();
+	btnOrderElements.style.display = "none";
+	btnContinue.style.display = "";
 };
 
 const Continuar = () => {
-	limites.slideUp(_tiempo);
-	retroGrupo.slideDown(_tiempo);
-	console.log("exito : " + exito);
-	if (exito) {
-		retroGrupo.addClass("retro-bien");
-	} else {
-		retroGrupo.addClass("retro-mal");
-	}
-	btnContinuar.hide();
+	limits.classList.add("hidden");
+	retroGrupo.classList.remove("hidden");
+
+	let retroClass = success ? "retro-bien" : "retro-mal";
+	retroGrupo.classList.add(retroClass);
+
+	btnContinue.style.display = "none";
 };
 
 const CerrarRetro = () => {};
 
 const SalirActividad = () => {};
 
-const sumar = (myarray) => {
-	const total = myarray.reduce((prevVal, curVal) => prevVal + curVal, 0);
+/* utilidades */
 
-	console.log("suma : " + total);
-	return total;
+const SUMAR = (myarray) => myarray.reduce((prevVal, curVal) => prevVal + curVal, 0);
+
+const verifyUsedDropAreas = () => {
+	cantArr = [];
+	dropAreas.forEach((caja) => {
+		if (caja.childElementCount > 0) {
+			caja.classList.add("occupied");
+			cantArr.push(1);
+		} else {
+			caja.classList.remove("occupied");
+			cantArr.push(0);
+		}
+	});
 };
+
+/* iniciar */
 
 iniEjercicio();

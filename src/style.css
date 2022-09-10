@@ -11,6 +11,9 @@
 	--font: system-ui;
 	--buttonSize: 48px;
 	--textcolor: var(--black);
+	--goodColor: #1f8f28;
+	--badColor: #8f1f37;
+	--transparent: transparent;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,39 +41,39 @@ html {
 	height: 100vh;
 }
 
-.actividad {
+.interaction-container {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space);
 }
 
 .drop-areas,
-.arrastrables {
+.draggables {
 	display: flex;
 	gap: var(--space);
 }
+.draggables {
+	z-index: 10;
+}
 
-.arrastrable {
+.draggable {
+	--mycolor: var(--testcolor);
 	width: var(--size);
 	height: var(--size);
 	border-radius: var(--radius1);
-	background-color: var(--testcolor);
+	background-color: var(--mycolor);
 	color: var(--white);
 	display: grid;
 	place-items: center;
 }
 
-.arrastrando {
+.dragging {
 	background-color: var(--bgcolor);
 	border: 1px solid var(--testcolor);
 	font-size: 0.5rem;
 }
 
-.recibido {
-	background-color: var(--testcolor2);
-}
-
-.arr-container {
+.draggable-container {
 	min-width: var(--size);
 	min-height: var(--minheight);
 	background-color: var(--bgcolor);
@@ -92,11 +95,26 @@ html {
 	border-radius: calc(var(--radius1) + var(--space));
 }
 
-.usado {
+.drop-area .draggable {
+	--mycolor: var(--testcolor2);
+}
+
+.drop-area .good {
+	--mycolor: var(--goodColor);
+}
+.drop-area .bad {
+	--mycolor: var(--badColor);
+}
+
+.occupied {
 	border-color: var(--textcolor);
 }
 
-.botonera {
+.able {
+	animation: blink-anim 300ms linear infinite alternate;
+}
+
+.buttons-container {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: var(--space);
@@ -113,4 +131,13 @@ button {
 }
 button:hover {
 	background-color: var(--testcolor);
+}
+
+@keyframes blink-anim {
+	from {
+		border-color: var(--textcolor);
+	}
+	to {
+		border-color: var(--transparent);
+	}
 }
