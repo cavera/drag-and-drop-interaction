@@ -1,25 +1,37 @@
 :root {
+	--font: system-ui;
+	--fontsize: 24px;
 	--size: 80px;
-	--testcolor: #3465fd;
-	--testcolor2: rgb(154, 36, 183);
-	--white: #fff;
-	--black: rgb(33, 33, 33);
-	--bgcolor: var(--white);
 	--radius1: 10px;
 	--space: 10px;
+	--sm-space: 5px;
 	--minheight: 40px;
-	--font: system-ui;
 	--buttonSize: 48px;
+	--contentwidth: 900px;
+	/* colors */
+	--primary: #118ab2;
+	--secondary: #d36301;
+	--goodColor: rgba(6, 214, 158, 0.5);
+	--badColor: rgba(239, 71, 110, 0.5);
+	--darkcolor: #073b4c;
+
+	--ctacolor: var(--secondary);
+	--white: #fff;
+	--black: rgb(33, 33, 33);
+	--bgcolor: #fcf9f9;
 	--textcolor: var(--black);
-	--goodColor: #1f8f28;
-	--badColor: #8f1f37;
 	--transparent: transparent;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--testcolor: #1f3884;
-		--bgcolor: rgb(33, 33, 33);
+		--primary: #118ab2;
+		--secondary: #ffd166;
+		--goodColor: rgba(3, 132, 98, 0.5);
+		--badColor: hsla(346, 84%, 61%, 0.5);
+		--darkcolor: #041d25;
+
+		--bgcolor: var(--darkcolor);
 		--textcolor: var(--white);
 	}
 }
@@ -31,7 +43,9 @@
 
 html {
 	font-family: var(--font);
+	font-size: var(--fontsize);
 	background-color: var(--bgcolor);
+	color: var(--textcolor);
 }
 
 .hidden {
@@ -49,9 +63,17 @@ html {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space);
+	max-width: var(--contentwidth);
+	width: 100%;
+	padding: var(--space);
 }
 
-.drop-areas,
+.interaction-instruction {
+	font-size: smaller;
+	opacity: 0.6;
+	color: var(--ctacolor);
+}
+
 .draggables {
 	display: flex;
 	gap: var(--space);
@@ -61,19 +83,28 @@ html {
 }
 
 .draggable {
-	--mycolor: var(--testcolor);
-	width: var(--size);
-	height: var(--size);
+	--mycolor: var(--primary);
+	width: auto;
+	height: auto;
+	padding: var(--sm-space) var(--space);
 	border-radius: var(--radius1);
 	background-color: var(--mycolor);
 	color: var(--white);
 	display: grid;
 	place-items: center;
+	transition-property: color, background-color;
+	transition-duration: 300ms;
+}
+
+.draggable p {
+	margin: 0;
+	margin-block-start: 0;
+	margin-block-end: 0;
 }
 
 .dragging {
 	background-color: var(--bgcolor);
-	border: 1px solid var(--testcolor);
+	border: 1px solid var(--primary);
 	font-size: 0.5rem;
 }
 
@@ -81,26 +112,28 @@ html {
 	min-width: var(--size);
 	min-height: var(--minheight);
 	background-color: var(--bgcolor);
-	border: 1px solid var(--testcolor);
-	padding: var(--space);
+	border: 1px solid var(--primary);
+	padding: var(--sm-space);
 	transition: width 0.3s ease-in-out;
-	border-radius: calc(var(--radius1) + var(--space));
+	border-radius: calc(var(--radius1) + var(--sm-space));
 }
 .drop-area {
 	min-width: var(--size);
-	min-height: var(--minheight);
+	height: auto;
+	min-height: calc(var(--space) * 2 + var(--fontsize));
+	vertical-align: middle;
+	margin: var(--sm-space) var(--space);
+	display: inline-block;
 	background-color: var(--bgcolor);
-	border: 1px solid var(--testcolor2);
-	padding: var(--space);
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--space);
+	border: 1px dashed var(--secondary);
 	transition: all 300ms ease-in-out;
-	border-radius: calc(var(--radius1) + var(--space));
+	border-radius: var(--radius1);
 }
 
 .drop-area .draggable {
-	--mycolor: var(--testcolor2);
+	--mycolor: var(--transparent);
+	padding: initial;
+	color: var(--textcolor);
 }
 
 .drop-area .good {
@@ -110,8 +143,11 @@ html {
 	--mycolor: var(--badColor);
 }
 
-.occupied {
-	border-color: var(--textcolor);
+.drop-area.occupied {
+	border-color: var(--transparent);
+	margin: 0;
+	padding: 0;
+	border-radius: 0;
 }
 
 .able {
@@ -134,7 +170,7 @@ button {
 	transition: all 300ms ease-in-out;
 }
 button:hover {
-	background-color: var(--testcolor);
+	background-color: var(--primary);
 }
 
 @keyframes blink-anim {

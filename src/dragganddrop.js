@@ -1,3 +1,4 @@
+/** @type All the initial vars */
 const limits = document.querySelector(".wrapper");
 const dragElemsClass = ".draggable";
 const dropAreasClass = ".drop-area";
@@ -7,20 +8,24 @@ const btnOrderElements = limits.querySelector("#btn-order");
 const btnAnswer = limits.querySelector("#btn-answer");
 const btnContinue = limits.querySelector("#btn-continue");
 const retroGrupo = document.querySelector(".retro-grupo");
-const btnCierreCont = retroGrupo.querySelector(".continuar");
+const btnCierreCont = retroGrupo.querySelector("#btn-modal-continue");
 let cantArr = [];
 let success;
-let isDebugging = true;
+let isDebugging = false;
 
-const iniEjercicio = () => {
+/**
+ * @description Start of all the initial states od the dom elements
+ * @author Leonardo Fonseca (cavera.de@gmail.com)
+ */
+const startDraggables = () => {
 	btnAnswer.addEventListener("click", Responder);
 	btnOrderElements.addEventListener("click", ordenarElementos);
 	btnContinue.addEventListener("click", Continuar);
 	btnCierreCont.addEventListener("click", CerrarRetro);
 
-	btnOrderElements.style.display = "none";
-	btnAnswer.style.display = "none";
-	btnContinue.style.display = "none";
+	btnOrderElements.classList.add("hidden");
+	btnAnswer.classList.add("hidden");
+	btnContinue.classList.add("hidden");
 
 	dragElems.forEach((dragElem, key) => {
 		dragElem.parentElement.id = `origin-${key + 1}`;
@@ -98,8 +103,7 @@ const centrarEn = (elemento, ubicacion) => {
 
 const verificarInfo = () => {
 	verifyUsedDropAreas();
-
-	btnAnswer.style.display = SUMAR(cantArr) < dropAreas.length ? "none" : "";
+	SUMAR(cantArr) < dropAreas.length ? btnAnswer.classList.add("hidden") : btnAnswer.classList.remove("hidden");
 };
 
 const Responder = () => {
@@ -110,8 +114,8 @@ const Responder = () => {
 		dragElem.classList.add(resultClass);
 	});
 
-	btnAnswer.style.display = "none";
-	btnOrderElements.style.display = "";
+	btnAnswer.classList.add("hidden");
+	btnOrderElements.classList.remove("hidden");
 
 	limits.classList.add("verificado");
 };
@@ -123,11 +127,14 @@ const ordenarElementos = () => {
 		const dragElemGrupo = dragElem.dataset.group;
 		const wrongEl = dragElem.classList.contains("bad");
 		const goodArea = limits.querySelector(`${dropAreasClass}[data-group='${dragElemGrupo}']`);
+
+		dragElem.classList.remove("good", "bad");
+
 		if (wrongEl) centrarEn(dragElem, goodArea);
 	});
 
-	btnOrderElements.style.display = "none";
-	btnContinue.style.display = "";
+	btnOrderElements.classList.add("hidden");
+	btnContinue.classList.remove("hidden");
 };
 
 const Continuar = () => {
@@ -137,7 +144,7 @@ const Continuar = () => {
 	let retroClass = success ? "retro-bien" : "retro-mal";
 	retroGrupo.classList.add(retroClass);
 
-	btnContinue.style.display = "none";
+	btnContinue.classList.add("hidden");
 };
 
 const CerrarRetro = () => {};
@@ -163,4 +170,4 @@ const verifyUsedDropAreas = () => {
 
 /* iniciar */
 
-iniEjercicio();
+startDraggables();

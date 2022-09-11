@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="./styles/style.css" />
+		<title>Completa la frase</title>
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="interaction-container">
+				<p class="interaction-instruction">Drag the words to the spaces inside the sentence.</p>
+				<div class="draggables">
+					<div class="draggable-container">
+						<div class="draggable" data-group="1"><p>enjoy</p></div>
+					</div>
+					<div class="draggable-container">
+						<div class="draggable" data-group="2"><p>teams and clients</p></div>
+					</div>
+					<div class="draggable-container">
+						<div class="draggable" data-group="3"><p>learn about technology</p></div>
+					</div>
+					<div class="draggable-container">
+						<div class="draggable" data-group="4"><p>native tongue</p></div>
+					</div>
+				</div>
+				<div class="drop-areas">
+					<p>I <span class="drop-area" data-group="1"></span> solving problems as a designer/developer who works with <span class="drop-area" data-group="2"></span> as well. I love to <span class="drop-area" data-group="3"></span> and the behind-the-scenes of movies. I speak English, and Spanish as my <span class="drop-area" data-group="4"></span>. I'm a self-learner and I'm studying continuously about tools and technologies to maintain my growth.</p>
+				</div>
+				<div class="buttons-container">
+					<button id="btn-order">Order</button>
+					<button id="btn-answer">Answer</button>
+					<button id="btn-continue">Continue</button>
+				</div>
+				<div class="retro-grupo">
+					<div id="btn-modal-continue"></div>
+				</div>
+			</div>
+		</div>
+		<script src="./src/gsap-public/minified/gsap.min.js"></script>
+		<script src="./src/gsap-public/minified/Draggable.min.js"></script>
+		<script src="./src/dragganddrop.js"></script>
+	</body>
+</html>
