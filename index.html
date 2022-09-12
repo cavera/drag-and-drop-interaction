@@ -4,14 +4,20 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;700&display=swap" rel="stylesheet" />
 		<link rel="stylesheet" href="./styles/style.css" />
-		<title>Completa la frase</title>
+		<title>Complete the sentence</title>
 	</head>
 	<body>
 		<div class="wrapper">
 			<div class="interaction-container">
-				<p class="interaction-instruction">Drag the words to the spaces inside the sentence.</p>
+				<h1>Drag and drop example:</h1>
+				<h2>Complete the sentence</h2>
 				<div class="draggables">
+					<p class="interaction-instruction">Drag the words to the spaces inside the sentence.</p>
+
 					<div class="draggable-container">
 						<div class="draggable" data-group="1"><span>enjoy</span></div>
 					</div>
@@ -26,17 +32,20 @@
 					</div>
 				</div>
 				<div class="drop-areas">
-					<p>I <span class="drop-area" data-group="1"></span> solving problems as a designer/developer who works with <span class="drop-area" data-group="2"></span> as well. I love to <span class="drop-area" data-group="3"></span> and the behind-the-scenes of movies. I speak English, and Spanish as my <span class="drop-area" data-group="4"></span>. I'm a self-learner and I'm studying continuously about tools and technologies to maintain my growth.</p>
+					<p>I <span class="drop-area" data-group="1"></span> solving problems as a designer/developer who works with <span class="drop-area" data-group="2"></span> as well.</p>
+					<p>I love to <span class="drop-area" data-group="3"></span> and the behind-the-scenes of movies. I speak English, and Spanish as my <span class="drop-area" data-group="4"></span>.</p>
+					<p>I'm a self-learner and I'm studying continuously about tools and technologies to maintain my growth.</p>
 				</div>
 				<div class="buttons-container">
 					<button id="btn-order">Order</button>
 					<button id="btn-answer">Answer</button>
-					<button id="btn-continue">Continue</button>
-				</div>
-				<div class="retro-grupo">
-					<div id="btn-modal-continue"></div>
+					<button id="btn-continue" class="">Continue</button>
 				</div>
 			</div>
+		</div>
+		<div class="retro-grupo">
+			<p>Great!</p>
+			<button id="restart">Restart</button>
 		</div>
 		<script src="./src/gsap-public/minified/gsap.min.js"></script>
 		<script src="./src/gsap-public/minified/Draggable.min.js"></script>

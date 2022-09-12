@@ -1,6 +1,6 @@
 # Drag and drop interaction
 
-Based on past experiences, I take an old jquery and ES5 js code and make it more readable and efficient.
+Based on past experiences, I took an old jquery code and make it more readable and efficient.
 
 ## Technologies
 

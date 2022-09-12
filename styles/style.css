@@ -1,7 +1,7 @@
 :root {
-	--font: system-ui;
-	--fontsize: 24px;
-	--size: 80px;
+	--font: 'Montserrat', sans-serif,system-ui;
+	--fontsize: 16px;
+	--size: 40px;
 	--radius1: 10px;
 	--space: 10px;
 	--sm-space: 5px;
@@ -18,7 +18,7 @@
 	--ctacolor: var(--secondary);
 	--white: #fff;
 	--black: rgb(33, 33, 33);
-	--bgcolor: #fcf9f9;
+	--bgcolor: #eee;
 	--textcolor: var(--black);
 	--transparent: transparent;
 }
@@ -26,10 +26,10 @@
 @media (prefers-color-scheme: dark) {
 	:root {
 		--primary: #118ab2;
-		--secondary: #ffd166;
 		--goodColor: rgba(3, 132, 98, 0.5);
 		--badColor: hsla(346, 84%, 61%, 0.5);
 		--darkcolor: #041d25;
+		--secondary: #f9bd31;
 
 		--bgcolor: var(--darkcolor);
 		--textcolor: var(--white);
@@ -42,14 +42,10 @@
 }
 
 html {
-	font-family: var(--font);
+	font-family:var(--font); 
 	font-size: var(--fontsize);
 	background-color: var(--bgcolor);
 	color: var(--textcolor);
-}
-
-.hidden {
-	display: none;
 }
 
 .wrapper {
@@ -59,24 +55,34 @@ html {
 	height: 100vh;
 }
 
+h1,h2{
+	font-weight: 200;
+}
+h1{
+	opacity: 0.5;
+	margin-bottom: -0.5em;
+}
+
 .interaction-container {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space);
 	max-width: var(--contentwidth);
 	width: 100%;
-	padding: var(--space);
+	padding: var(--space) var(--size);
 }
 
 .interaction-instruction {
 	font-size: smaller;
-	opacity: 0.6;
 	color: var(--ctacolor);
+	flex-basis: 100%;
+	margin-bottom: 1em;
 }
 
 .draggables {
 	display: flex;
-	gap: var(--space);
+	flex-wrap: wrap;
+	gap: var(--sm-space);
 }
 .draggables {
 	z-index: 10;
@@ -96,16 +102,11 @@ html {
 	transition-duration: 300ms;
 }
 
-.draggable p {
-	margin: 0;
-	margin-block-start: 0;
-	margin-block-end: 0;
-}
-
 .dragging {
 	background-color: var(--bgcolor);
 	border: 1px solid var(--primary);
 	font-size: 0.5rem;
+	color: var(--textcolor);
 }
 
 .draggable-container {
@@ -117,8 +118,17 @@ html {
 	transition: width 0.3s ease-in-out;
 	border-radius: calc(var(--radius1) + var(--sm-space));
 }
+
+.drop-areas{
+	font-size: 1.7rem;
+	font-weight: 700;
+}
+
+.drop-areas p{
+	margin-bottom: 0.6em
+}
 .drop-area {
-	min-width: var(--size);
+	min-width: calc(var(--size) * 2);
 	height: auto;
 	min-height: calc(var(--space) * 2 + var(--fontsize));
 	vertical-align: middle;
@@ -148,6 +158,8 @@ html {
 	margin: 0;
 	padding: 0;
 	border-radius: 0;
+	min-height: auto;
+	vertical-align: baseline;
 }
 
 .able {
@@ -155,9 +167,20 @@ html {
 }
 
 .buttons-container {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	display: flex;
+	justify-content: center;
 	gap: var(--space);
+}
+
+.retro-grupo{
+	position: fixed;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--bgcolor);
+	z-index: 20;
 }
 
 button {
@@ -168,9 +191,14 @@ button {
 	border-radius: var(--radius1);
 	font-size: 1rem;
 	transition: all 300ms ease-in-out;
+	padding: var(--sm-space) var(--size);
 }
 button:hover {
 	background-color: var(--primary);
+}
+
+.hidden {
+	display: none;
 }
 
 @keyframes blink-anim {

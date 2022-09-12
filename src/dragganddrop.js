@@ -1,5 +1,7 @@
 /** @type All the initial vars */
 const limits = document.querySelector(".wrapper");
+const instruction = limits.querySelector(".interaction-instruction");
+const draggables = limits.querySelector(".draggables");
 const dragElemsClass = ".draggable";
 const dropAreasClass = ".drop-area";
 const dragElems = document.querySelectorAll(dragElemsClass);
@@ -8,7 +10,7 @@ const btnOrderElements = limits.querySelector("#btn-order");
 const btnAnswer = limits.querySelector("#btn-answer");
 const btnContinue = limits.querySelector("#btn-continue");
 const retroGrupo = document.querySelector(".retro-grupo");
-const btnCierreCont = retroGrupo.querySelector("#btn-modal-continue");
+const btnRestart = retroGrupo.querySelector("#restart");
 let cantArr = [];
 let success;
 let isDebugging = false;
@@ -18,18 +20,19 @@ let isDebugging = false;
  * @author Leonardo Fonseca (cavera.de@gmail.com)
  */
 const startDraggables = () => {
-	btnAnswer.addEventListener("click", Responder);
-	btnOrderElements.addEventListener("click", ordenarElementos);
-	btnContinue.addEventListener("click", Continuar);
-	btnCierreCont.addEventListener("click", CerrarRetro);
+	btnAnswer.addEventListener("click", Answer);
+	btnOrderElements.addEventListener("click", orderDraggables);
+	btnContinue.addEventListener("click", Continue);
+	btnRestart.addEventListener("click", Restart);
 
 	btnOrderElements.classList.add("hidden");
 	btnAnswer.classList.add("hidden");
 	btnContinue.classList.add("hidden");
+	retroGrupo.classList.add("hidden");
 
 	dragElems.forEach((dragElem, key) => {
-		dragElem.parentElement.id = `origin-${key + 1}`;
-		dragElem.dataset.parent = dragElem.parentElement.id;
+		dragElem.parentElement.classList.add(`origin-${key + 1}`);
+		dragElem.dataset.parent = `origin-${key + 1}`;
 
 		if (isDebugging) dragElem.innerHTML = `${dragElem.dataset.parent}`;
 
@@ -79,7 +82,7 @@ const hasDropped = (arrasEl) => {
 			caja.classList.remove("able");
 
 			encaja = true;
-			verificarInfo();
+			verifyInfo();
 		}
 	});
 	verifyUsedDropAreas();
@@ -89,10 +92,10 @@ const hasDropped = (arrasEl) => {
 
 const Devolver = function (el) {
 	let elParent = el.getAttribute("data-parent");
-	let arContainer = document.getElementById(elParent);
+	let arContainer = document.querySelector(`.${elParent}`);
 	arContainer.append(el);
 	gsap.set(el, { clearProps: "transform" });
-	verificarInfo();
+	verifyInfo();
 };
 
 const centrarEn = (elemento, ubicacion) => {
@@ -101,12 +104,18 @@ const centrarEn = (elemento, ubicacion) => {
 	gsap.set(elemento, { clearProps: "transform" });
 };
 
-const verificarInfo = () => {
+const verifyInfo = () => {
 	verifyUsedDropAreas();
-	SUMAR(cantArr) < dropAreas.length ? btnAnswer.classList.add("hidden") : btnAnswer.classList.remove("hidden");
+	if (SUMAR(cantArr) < dropAreas.length) {
+		btnAnswer.classList.add("hidden");
+		draggables.classList.remove("hidden");
+	} else {
+		btnAnswer.classList.remove("hidden");
+		draggables.classList.add("hidden");
+	}
 };
 
-const Responder = () => {
+const Answer = () => {
 	dragElems.forEach((dragElem) => {
 		const dragElemGrupo = dragElem.dataset.group;
 		const dropGrupo = dragElem.parentElement.dataset.group;
@@ -120,8 +129,8 @@ const Responder = () => {
 	limits.classList.add("verificado");
 };
 
-const ordenarElementos = () => {
-	console.log("ordenarElementos");
+const orderDraggables = () => {
+	console.log("orderDraggables");
 
 	dragElems.forEach((dragElem) => {
 		const dragElemGrupo = dragElem.dataset.group;
@@ -137,7 +146,7 @@ const ordenarElementos = () => {
 	btnContinue.classList.remove("hidden");
 };
 
-const Continuar = () => {
+const Continue = () => {
 	limits.classList.add("hidden");
 	retroGrupo.classList.remove("hidden");
 
@@ -147,7 +156,7 @@ const Continuar = () => {
 	btnContinue.classList.add("hidden");
 };
 
-const CerrarRetro = () => {};
+const Restart = () => window.location.reload();
 
 const SalirActividad = () => {};
 
