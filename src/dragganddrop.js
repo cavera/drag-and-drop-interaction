@@ -31,8 +31,11 @@ const startDraggables = () => {
 	retroGrupo.classList.add("hidden");
 
 	dragElems.forEach((dragElem, key) => {
-		dragElem.parentElement.classList.add(`origin-${key + 1}`);
+		const drParent = dragElem.parentElement;
+		drParent.classList.add(`origin-${key + 1}`);
 		dragElem.dataset.parent = `origin-${key + 1}`;
+
+		drParent.style.width = `${drParent.offsetWidth}px`;
 
 		if (isDebugging) dragElem.innerHTML = `${dragElem.dataset.parent}`;
 
@@ -140,6 +143,7 @@ const orderDraggables = () => {
 		dragElem.classList.remove("good", "bad");
 
 		if (wrongEl) centrarEn(dragElem, goodArea);
+		Draggable.get(dragElem).kill();
 	});
 
 	btnOrderElements.classList.add("hidden");
