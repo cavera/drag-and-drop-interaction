@@ -9,6 +9,7 @@
 	--buttonSize: 48px;
 	--contentwidth: 900px;
 	--media-mobile: 480px;
+	--height: auto;
 
 	--panel-opacity: 0.8;
 	--item-opacity: 0.5;
@@ -100,7 +101,7 @@ h1 {
 .draggable {
 	--mycolor: var(--primary);
 	width: auto;
-	height: auto;
+	min-height: var(--height);
 	padding: var(--sm-space) var(--space);
 	border-radius: var(--radius1);
 	background-color: var(--mycolor);
@@ -220,6 +221,9 @@ button:hover {
 }
 
 @media (max-width: 480px) {
+	:root {
+		--height: 48px;
+	}
 	.wrapper {
 		margin-bottom: 30vh;
 	}
